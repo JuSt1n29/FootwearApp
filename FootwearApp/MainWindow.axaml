@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:Width="1100" d:Height="700"
+        x:Class="FootwearApp.MainWindow"
+        Title="Footwear Catalog Manager"
+        Background="#1e1e1e" Foreground="White">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="15">
+        
+        <!-- Вибір таблиці -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+            <TextBlock Text="Виберіть таблицю:" VerticalAlignment="Center" FontWeight="Bold"/>
+            <ComboBox x:Name="CbTables" Width="200" SelectedIndex="0">
+                <ComboBoxItem Content="country"/>
+                <ComboBoxItem Content="brand"/>
+                <ComboBoxItem Content="category"/>
+                <ComboBoxItem Content="material"/>
+                <ComboBoxItem Content="shoe_type"/>
+                <ComboBoxItem Content="sole"/>
+                <ComboBoxItem Content="style"/>
+                <ComboBoxItem Content="audience"/>
+                <ComboBoxItem Content="footwear_catalog"/>
+            </ComboBox>
+            <Button x:Name="BtnRefresh" Content="Оновити" Background="#333" Foreground="White"/>
+        </StackPanel>
+
+        <!-- Таблиця для перегляду списку -->
+        <DataGrid Grid.Row="1" x:Name="DataGridItems" AutoGenerateColumns="True" 
+                  IsReadOnly="True" Margin="0,0,0,15" Background="#252526"/>
+
+        <!-- Панель вводу -->
+        <Border Grid.Row="2" Background="#2d2d2d" Padding="15" CornerRadius="8" MaxHeight="250">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Керування записами (за назвою):" FontWeight="Bold" FontSize="14"/>
+                    
+                    <WrapPanel ItemWidth="180" ItemHeight="55">
+                        <StackPanel Margin="0,0,10,0"><TextBlock Text="Назва (nazva):"/><TextBox x:Name="TxtBoxName"/></StackPanel>
+                        
+                        <!-- Додаткові поля для специфічних таблиць -->
+                        <StackPanel x:Name="PanelCountryId" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_country:"/><TextBox x:Name="TxtBoxCountryId" Text="1"/></StackPanel>
+
+                        <!-- Поля для каталогу взуття -->
+                        <StackPanel x:Name="PanelCatalog1" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_shoe_type:"/><TextBox x:Name="TxtBoxShoeType" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog2" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_audience:"/><TextBox x:Name="TxtBoxAudience" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog3" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_brand:"/><TextBox x:Name="TxtBoxBrand" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog4" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_upper_material:"/><TextBox x:Name="TxtBoxUpperMat" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog5" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_lining_material:"/><TextBox x:Name="TxtBoxLiningMat" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog6" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_sole_material:"/><TextBox x:Name="TxtBoxSoleMat" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog7" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="color:"/><TextBox x:Name="TxtBoxColor" Text="Чорний"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog8" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="sizes:"/><TextBox x:Name="TxtBoxSizes" Text="36-40"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog9" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="season:"/><TextBox x:Name="TxtBoxSeason" Text="Літо"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog10" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="price:"/><TextBox x:Name="TxtBoxPrice" Text="1000"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog11" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_category:"/><TextBox x:Name="TxtBoxCategory" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog12" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_country:"/><TextBox x:Name="TxtBoxCatalogCountry" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog13" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_sole_type:"/><TextBox x:Name="TxtBoxSoleType" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog14" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="shaft_height:"/><TextBox x:Name="TxtBoxShaftHeight" Text="Низькі"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog15" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="width_fit:"/><TextBox x:Name="TxtBoxWidthFit" Text="Стандартна"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog16" Margin="0,0,10,0" IsVisible="False"><TextBox x:Name="TxtBoxFastener" Text="Шнурки"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog17" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="has_membrane (0/1):"/><TextBox x:Name="TxtBoxMembrane" Text="0"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog18" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="id_style:"/><TextBox x:Name="TxtBoxStyle" Text="1"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog19" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="collection:"/><TextBox x:Name="TxtBoxCollection" Text="Classic"/></StackPanel>
+                        <StackPanel x:Name="PanelCatalog20" Margin="0,0,10,0" IsVisible="False"><TextBlock Text="warranty_months:"/><TextBox x:Name="TxtBoxWarranty" Text="12"/></StackPanel>
+                    </WrapPanel>
+
+                    <!-- Кнопки керування -->
+                    <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,10,0,0">
+                        <Button x:Name="BtnAdd" Content="Додати" Background="#007acc" Foreground="White" Width="120"/>
+                        <Button x:Name="BtnDelete" Content="Видалити за назвою" Background="#d9534f" Foreground="White" Width="160"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+    </Grid>
+</Window>
