@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class AudienceRep : IRepository<AudienceTable>
+    internal class AudienceRep
     {
-        public AudienceTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public AudienceTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (AudienceTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<AudienceTable> GetAll()
+        {
+            List<AudienceTable> list = new List<AudienceTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM audience"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new AudienceTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(AudienceTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `audience`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `audience` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO audience (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(AudienceTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `audience` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM audience WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(AudienceTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<AudienceTable> GetAll()
+        public bool Update(AudienceTable entity)
         {
-            var list = new List<AudienceTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `audience`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new AudienceTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE audience SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

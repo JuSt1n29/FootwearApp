@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class SoleRep : IRepository<SoleTable>
+    internal class SoleRep
     {
-        public SoleTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public SoleTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (SoleTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<SoleTable> GetAll()
+        {
+            List<SoleTable> list = new List<SoleTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM sole"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new SoleTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(SoleTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `sole`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `sole` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO sole (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(SoleTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `sole` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM sole WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(SoleTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<SoleTable> GetAll()
+        public bool Update(SoleTable entity)
         {
-            var list = new List<SoleTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `sole`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new SoleTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE sole SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

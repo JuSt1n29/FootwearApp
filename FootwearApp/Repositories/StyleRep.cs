@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class StyleRep : IRepository<StyleTable>
+    internal class StyleRep
     {
-        public StyleTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public StyleTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (StyleTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<StyleTable> GetAll()
+        {
+            List<StyleTable> list = new List<StyleTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM style"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new StyleTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(StyleTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `style`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `style` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO style (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(StyleTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `style` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM style WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(StyleTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<StyleTable> GetAll()
+        public bool Update(StyleTable entity)
         {
-            var list = new List<StyleTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `style`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new StyleTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE style SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

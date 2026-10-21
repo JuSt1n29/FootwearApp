@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class CountryRep : IRepository<CountryTable>
+    internal class CountryRep
     {
-        public CountryTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public CountryTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (CountryTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<CountryTable> GetAll()
+        {
+            List<CountryTable> list = new List<CountryTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM country"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new CountryTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(CountryTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `country`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `country` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO country (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(CountryTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `country` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM country WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(CountryTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<CountryTable> GetAll()
+        public bool Update(CountryTable entity)
         {
-            var list = new List<CountryTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `country`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new CountryTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE country SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

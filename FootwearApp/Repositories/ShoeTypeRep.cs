@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class ShoeTypeRep : IRepository<ShoeTypeTable>
+    internal class ShoeTypeRep
     {
-        public ShoeTypeTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public ShoeTypeTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (ShoeTypeTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<ShoeTypeTable> GetAll()
+        {
+            List<ShoeTypeTable> list = new List<ShoeTypeTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM shoe_type"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new ShoeTypeTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(ShoeTypeTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `shoe_type`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `shoe_type` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO shoe_type (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(ShoeTypeTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `shoe_type` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM shoe_type WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(ShoeTypeTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<ShoeTypeTable> GetAll()
+        public bool Update(ShoeTypeTable entity)
         {
-            var list = new List<ShoeTypeTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `shoe_type`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new ShoeTypeTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE shoe_type SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

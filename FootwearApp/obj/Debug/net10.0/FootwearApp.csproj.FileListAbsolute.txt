@@ -111,3 +111,4 @@
 /home/justin/RiderProjects/FootwearApp/FootwearApp/bin/Debug/net10.0/runtimes/win/lib/net10.0/System.Diagnostics.EventLog.dll
 /home/justin/RiderProjects/FootwearApp/FootwearApp/bin/Debug/net10.0/runtimes/win/lib/net10.0/System.Windows.Extensions.dll
 /home/justin/RiderProjects/FootwearApp/FootwearApp/bin/Debug/net10.0/MySqlConnector.dll
+/home/justin/RiderProjects/FootwearApp/FootwearApp/obj/Debug/net10.0/FootwearApp.sourcelink.json

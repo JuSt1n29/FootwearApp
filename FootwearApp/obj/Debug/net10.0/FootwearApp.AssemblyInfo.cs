@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FootwearApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3e44baa077f4ab955f8adfe8df7197e3702ca47")]
 [assembly: System.Reflection.AssemblyProductAttribute("FootwearApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FootwearApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

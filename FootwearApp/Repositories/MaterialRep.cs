@@ -4,42 +4,83 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class MaterialRep : IRepository<MaterialTable>
+    internal class MaterialRep
     {
-        public MaterialTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public MaterialTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (MaterialTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<MaterialTable> GetAll()
+        {
+            List<MaterialTable> list = new List<MaterialTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name FROM material"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new MaterialTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(MaterialTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `material`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `material` (id, name) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}')";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO material (name) VALUES ('{entity.nazva}')");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(MaterialTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `material` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM material WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(MaterialTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<MaterialTable> GetAll()
+        public bool Update(MaterialTable entity)
         {
-            var list = new List<MaterialTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name FROM `material`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new MaterialTable(reader.GetInt32("id"), reader.GetString("name")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE material SET name = '{entity.nazva}' WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

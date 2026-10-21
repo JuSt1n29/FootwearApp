@@ -4,42 +4,84 @@ using FootwearApp.Tables;
 
 namespace FootwearApp.Repositories
 {
-    internal class BrandRep : IRepository<BrandTable>
+    internal class BrandRep
     {
-        public BrandTable? GetbyID(int id)
+        DB db = DB.getInstance();
+
+        public BrandTable GetbyID(int id)
         {
-            foreach (var item in GetAll()) if (item.id == id) return item;
+            foreach (BrandTable k in GetAll())
+            {
+                if (k.id == id)
+                    return k;
+            }
             return null;
+        }
+
+        public IEnumerable<BrandTable> GetAll()
+        {
+            List<BrandTable> list = new List<BrandTable>();
+            try
+            {
+                using (var reader = db.execSelect("SELECT id, name, id_country FROM brand"))
+                {
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new BrandTable(
+                                reader.GetInt32("id"),
+                                reader.GetString("name"),
+                                reader.GetInt32("id_country")
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return list;
         }
 
         public bool Add(BrandTable entity)
         {
-            var maxId = DB.getInstance().execScalar("SELECT IFNULL(MAX(id), 0) + 1 FROM `brand`");
-            entity.id = maxId != null ? Convert.ToInt32(maxId) : 1;
-            string sql = $"INSERT INTO `brand` (id, name, id_country) VALUES ({entity.id}, '{entity.nazva.Replace("'", "''")}', {entity.id_country})";
-            return DB.getInstance().execSql(sql);
+            try
+            {
+                return db.execSql($"INSERT INTO brand (name, id_country) VALUES ('{entity.nazva}', {entity.id_country})");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public bool Delete(BrandTable entity)
         {
-            return DB.getInstance().execSql($"DELETE FROM `brand` WHERE id = {entity.id}");
+            try
+            {
+                return db.execSql($"DELETE FROM brand WHERE id = {entity.id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
 
-        public bool Update(BrandTable entity) => throw new NotImplementedException();
-
-        public IEnumerable<BrandTable> GetAll()
+        public bool Update(BrandTable entity)
         {
-            var list = new List<BrandTable>();
-            var reader = DB.getInstance().execSelect("SELECT id, name, id_country FROM `brand`");
-            if (reader != null)
+            try
             {
-                while (reader.Read())
-                {
-                    list.Add(new BrandTable(reader.GetInt32("id"), reader.GetString("name"), reader.GetInt32("id_country")));
-                }
-                reader.Close();
+                return db.execSql($"UPDATE brand SET name = '{entity.nazva}', id_country = {entity.id_country} WHERE id = {entity.id}");
             }
-            return list;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }
