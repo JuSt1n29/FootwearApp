@@ -9,7 +9,6 @@ namespace FootwearApp
     public partial class MainWindow : Window
     {
         private string currentTable = "Country";
-        private int selectedId = -1;
 
         public MainWindow()
         {
@@ -23,7 +22,6 @@ namespace FootwearApp
         {
             if (sender is Button btn)
             {
-                selectedId = -1;
                 if (btn == BtnCountry) currentTable = "Country";
                 else if (btn == BtnBrand) currentTable = "Brand";
                 else if (btn == BtnCategory) currentTable = "Category";
@@ -45,9 +43,7 @@ namespace FootwearApp
         {
             InputsPanel.Children.Clear();
 
-            // Поле ID
-            AddInputField("ID", "IdBox", isReadOnly: false);
-
+            // 1. Поля для основних даних (Name, Price, Color тощо)
             if (tableName == "FootwearCatalog")
             {
                 AddInputField("Name", "NameBox");
@@ -63,21 +59,24 @@ namespace FootwearApp
             {
                 AddInputField("Name", "NameBox");
             }
-            Console.WriteLine($"[DEBUG] Поля введення побудовано для таблиці: {tableName}");
+
+            // 2. Поле виключно для ОНОВЛЕННЯ за ID
+            AddInputField("Update ID", "UpdateIdBox");
+
+            Console.WriteLine($"[DEBUG] Поля побудовано для: {tableName}");
         }
 
-        private void AddInputField(string placeholder, string name, bool isReadOnly = false)
+        private void AddInputField(string placeholder, string name)
         {
             var panel = new StackPanel { Spacing = 2 };
             panel.Children.Add(new TextBlock { Text = placeholder, FontSize = 10, Foreground = Avalonia.Media.Brushes.Gray });
             
-            var textBox = new TextBox { Name = name, Width = 100, Height = 28, IsReadOnly = isReadOnly };
+            var textBox = new TextBox { Name = name, Width = 100, Height = 28 };
             panel.Children.Add(textBox);
             
             InputsPanel.Children.Add(panel);
         }
 
-        // Надійний пошук TextBox всередині динамічної панелі
         private TextBox? GetTextBoxByName(string name)
         {
             foreach (var child in InputsPanel.Children)
@@ -117,11 +116,11 @@ namespace FootwearApp
                 };
 
                 MainDataGrid.ItemsSource = data;
-                Console.WriteLine($"[DEBUG] Дані для таблиці {tableName} успішно завантажено в DataGrid.");
+                Console.WriteLine($"[DEBUG] Дані для таблиці {tableName} успішно завантажено.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Помилка завантаження даних для {tableName}: {ex.Message}");
+                Console.WriteLine($"[ERROR] Помилка завантаження: {ex.Message}");
             }
         }
 
@@ -131,37 +130,43 @@ namespace FootwearApp
 
             var item = MainDataGrid.SelectedItem;
             
-            // Зчитуємо ID
-            var idProp = item.GetType().GetProperty("id");
-            if (idProp != null)
-            {
-                selectedId = (int)(idProp.GetValue(item) ?? -1);
-                var idBox = GetTextBoxByName("IdBox");
-                if (idBox != null) idBox.Text = selectedId.ToString();
-            }
-
-            // Зчитуємо Назву
+            // При кліку на рядок підтягуємо назву в NameBox
             var nameProp = item.GetType().GetProperty("nazva") ?? item.GetType().GetProperty("name");
             if (nameProp != null)
             {
-                string val = nameProp.GetValue(item)?.ToString() ?? "";
-                var nameBox = GetTextBoxByName("NameBox");
-                if (nameBox != null) nameBox.Text = val;
+                var valObj = nameProp.GetValue(item);
+                if (valObj != null)
+                {
+                    string val = valObj.ToString() ?? "";
+                    var nameBox = GetTextBoxByName("NameBox");
+                    if (nameBox != null) nameBox.Text = val;
+                }
             }
 
-            Console.WriteLine($"[DEBUG] Вибрано рядок: ID = {selectedId}");
+            // Підтягуємо ID в UpdateIdBox для зручності оновлення
+            var idProp = item.GetType().GetProperty("id");
+            if (idProp != null)
+            {
+                var idObj = idProp.GetValue(item);
+                if (idObj != null)
+                {
+                    var updateIdBox = GetTextBoxByName("UpdateIdBox");
+                    if (updateIdBox != null) updateIdBox.Text = idObj.ToString();
+                }
+            }
         }
 
+        // ДОДАВАННЯ
         private void OnAddClick(object? sender, RoutedEventArgs e)
         {
             var nameBox = GetTextBoxByName("NameBox");
-            string nameVal = nameBox?.Text ?? "";
+            string nameVal = nameBox?.Text?.Trim().ToLower() ?? "";
 
-            Console.WriteLine($"[DEBUG] Спроба додавання запису в '{currentTable}' з ім'ям: '{nameVal}'");
+            Console.WriteLine($"[DEBUG UI] Спроба додавання в '{currentTable}' з ім'ям: '{nameVal}'");
 
             if (string.IsNullOrWhiteSpace(nameVal))
             {
-                Console.WriteLine("[WARNING] Помилка: Поле 'Name' порожнє!");
+                Console.WriteLine("[WARNING] Поле 'Name' порожнє!");
                 return;
             }
 
@@ -177,108 +182,115 @@ namespace FootwearApp
                     "Sole" => new SoleRep().Add(new SoleTable(0, nameVal)),
                     "Style" => new StyleRep().Add(new StyleTable(0, nameVal)),
                     "Audience" => new AudienceRep().Add(new AudienceTable(0, nameVal)),
-                    "Brand" => AddBrandHelper(),
+                    "Brand" => AddBrandHelper(nameVal),
+                    "FootwearCatalog" => AddCatalogHelper(nameVal),
                     _ => false
                 };
             }
+            catch (MySql.Data.MySqlClient.MySqlException mysqlEx) when (mysqlEx.Number == 1062)
+            {
+                Console.WriteLine("[ERROR] Дублікат! Запис із такою назвою вже існує.");
+                return;
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Виняток у репозиторії під час Add: {ex.Message}");
+                Console.WriteLine($"[ERROR] Помилка Add: {ex.Message}");
             }
 
             if (success)
             {
-                Console.WriteLine("[DEBUG] Запис успішно додано!");
+                Console.WriteLine("[DEBUG UI] Успішно додано!");
                 LoadTableData(currentTable);
                 ClearInputs();
             }
             else
             {
-                Console.WriteLine("[ERROR] Не вдалося додати запис у базу даних.");
+                Console.WriteLine("[ERROR] Не вдалося додати запис.");
             }
         }
 
-        private bool AddBrandHelper()
+        private bool AddBrandHelper(string nameVal)
         {
-            var nameBox = GetTextBoxByName("NameBox");
             var countryIdBox = GetTextBoxByName("CountryIdBox");
-            int.TryParse(countryIdBox?.Text, out int cId);
-            return new BrandRep().Add(new BrandTable(0, nameBox?.Text ?? "", cId));
+            if (!int.TryParse(countryIdBox?.Text, out int cId)) return false;
+            return new BrandRep().Add(new BrandTable(0, nameVal, cId));
         }
 
+        private bool AddCatalogHelper(string nameVal)
+        {
+            var priceBox = GetTextBoxByName("PriceBox");
+            var colorBox = GetTextBoxByName("ColorBox");
+            if (!decimal.TryParse(priceBox?.Text, out decimal price)) return false;
+            
+            return new FootwearCatalogRep().Add(new FootwearCatalogTable(0, nameVal, 0, 0, 0, 0, 0, 0, "", "", "", price, 0, 0, 0, "", "", "", 0, 0, colorBox?.Text ?? "", 0));
+        }
+
+        // ОНОВЛЕННЯ (Використовує UpdateIdBox для вибору запису та NameBox для нових даних)
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
-            var idBox = GetTextBoxByName("IdBox");
-            if (int.TryParse(idBox?.Text, out int parsedId))
-            {
-                selectedId = parsedId;
-            }
+            var updateIdBox = GetTextBoxByName("UpdateIdBox");
+            var nameBox = GetTextBoxByName("NameBox");
 
-            Console.WriteLine($"[DEBUG] Спроба оновлення запису з ID = {selectedId} в таблиці '{currentTable}'");
-
-            if (selectedId == -1)
+            if (updateIdBox == null || !int.TryParse(updateIdBox.Text, out int idVal) || idVal <= 0)
             {
-                Console.WriteLine("[WARNING] Помилка: ID не вказано або рядок не вибрано!");
+                Console.WriteLine("[WARNING] Введіть коректний ID для оновлення у полі 'Update ID'!");
                 return;
             }
 
-            var nameBox = GetTextBoxByName("NameBox");
-            string nameVal = nameBox?.Text ?? "";
+            string nameVal = nameBox?.Text?.Trim().ToLower() ?? "";
+            Console.WriteLine($"[DEBUG UI] Спроба оновлення в '{currentTable}' за ID: {idVal} на нове значення: '{nameVal}'");
+
+            if (string.IsNullOrWhiteSpace(nameVal))
+            {
+                Console.WriteLine("[WARNING] Поле 'Name' порожнє!");
+                return;
+            }
 
             bool success = false;
             try
             {
                 success = currentTable switch
                 {
-                    "Country" => new CountryRep().Update(new CountryTable(selectedId, nameVal)),
-                    "Category" => new CategoryRep().Update(new CategoryTable(selectedId, nameVal)),
-                    "Material" => new MaterialRep().Update(new MaterialTable(selectedId, nameVal)),
-                    "ShoeType" => new ShoeTypeRep().Update(new ShoeTypeTable(selectedId, nameVal)),
-                    "Sole" => new SoleRep().Update(new SoleTable(selectedId, nameVal)),
-                    "Style" => new StyleRep().Update(new StyleTable(selectedId, nameVal)),
-                    "Audience" => new AudienceRep().Update(new AudienceTable(selectedId, nameVal)),
-                    "Brand" => UpdateBrandHelper(selectedId),
+                    "Country" => new CountryRep().Update(new CountryTable(idVal, nameVal)),
+                    "Category" => new CategoryRep().Update(new CategoryTable(idVal, nameVal)),
+                    "Material" => new MaterialRep().Update(new MaterialTable(idVal, nameVal)),
+                    "ShoeType" => new ShoeTypeRep().Update(new ShoeTypeTable(idVal, nameVal)),
+                    "Sole" => new SoleRep().Update(new SoleTable(idVal, nameVal)),
+                    "Style" => new StyleRep().Update(new StyleTable(idVal, nameVal)),
+                    "Audience" => new AudienceRep().Update(new AudienceTable(idVal, nameVal)),
+                    "Brand" => new BrandRep().Update(new BrandTable(idVal, nameVal, 0)),
+                    "FootwearCatalog" => new FootwearCatalogRep().Update(new FootwearCatalogTable(idVal, nameVal, 0, 0, 0, 0, 0, 0, "", "", "", 0, 0, 0, 0, "", "", "", 0, 0, "", 0)),
                     _ => false
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Виняток у репозиторії під час Update: {ex.Message}");
+                Console.WriteLine($"[ERROR] Помилка Update: {ex.Message}");
             }
 
             if (success)
             {
-                Console.WriteLine("[DEBUG] Запис успішно оновлено!");
+                Console.WriteLine("[DEBUG UI] Запис успішно оновлено!");
                 LoadTableData(currentTable);
                 ClearInputs();
             }
             else
             {
-                Console.WriteLine("[ERROR] Не вдалося оновити запис у базі даних.");
+                Console.WriteLine("[ERROR] Не вдалося оновити запис.");
             }
         }
 
-        private bool UpdateBrandHelper(int id)
-        {
-            var nameBox = GetTextBoxByName("NameBox");
-            var countryIdBox = GetTextBoxByName("CountryIdBox");
-            int.TryParse(countryIdBox?.Text, out int cId);
-            return new BrandRep().Update(new BrandTable(id, nameBox?.Text ?? "", cId));
-        }
-
+        // ВИДАЛЕННЯ (Використовує NameBox за назвою без ID)
         private void OnDeleteClick(object? sender, RoutedEventArgs e)
         {
-            var idBox = GetTextBoxByName("IdBox");
-            if (int.TryParse(idBox?.Text, out int parsedId))
-            {
-                selectedId = parsedId;
-            }
+            var nameBox = GetTextBoxByName("NameBox");
+            string nameVal = nameBox?.Text?.Trim().ToLower() ?? "";
 
-            Console.WriteLine($"[DEBUG] Спроба видалення запису з ID = {selectedId} з таблиці '{currentTable}'");
+            Console.WriteLine($"[DEBUG UI] Спроба видалення з '{currentTable}' за ім'ям: '{nameVal}'");
 
-            if (selectedId == -1)
+            if (string.IsNullOrWhiteSpace(nameVal))
             {
-                Console.WriteLine("[WARNING] Помилка: ID для видалення не вказано!");
+                Console.WriteLine("[WARNING] Поле 'Name' порожнє, неможливо видалити!");
                 return;
             }
 
@@ -287,37 +299,37 @@ namespace FootwearApp
             {
                 success = currentTable switch
                 {
-                    "Country" => new CountryRep().Delete(new CountryTable(selectedId, "")),
-                    "Category" => new CategoryRep().Delete(new CategoryTable(selectedId, "")),
-                    "Material" => new MaterialRep().Delete(new MaterialTable(selectedId, "")),
-                    "ShoeType" => new ShoeTypeRep().Delete(new ShoeTypeTable(selectedId, "")),
-                    "Sole" => new SoleRep().Delete(new SoleTable(selectedId, "")),
-                    "Style" => new StyleRep().Delete(new StyleTable(selectedId, "")),
-                    "Audience" => new AudienceRep().Delete(new AudienceTable(selectedId, "")),
-                    "Brand" => new BrandRep().Delete(new BrandTable(selectedId, "", 0)),
+                    "Country" => new CountryRep().Delete(new CountryTable(0, nameVal)),
+                    "Category" => new CategoryRep().Delete(new CategoryTable(0, nameVal)),
+                    "Material" => new MaterialRep().Delete(new MaterialTable(0, nameVal)),
+                    "ShoeType" => new ShoeTypeRep().Delete(new ShoeTypeTable(0, nameVal)),
+                    "Sole" => new SoleRep().Delete(new SoleTable(0, nameVal)),
+                    "Style" => new StyleRep().Delete(new StyleTable(0, nameVal)),
+                    "Audience" => new AudienceRep().Delete(new AudienceTable(0, nameVal)),
+                    "Brand" => new BrandRep().Delete(new BrandTable(0, nameVal, 0)),
+                    "FootwearCatalog" => new FootwearCatalogRep().Delete(new FootwearCatalogTable(0, nameVal, 0, 0, 0, 0, 0, 0, "", "", "", 0, 0, 0, 0, "", "", "", 0, 0, "", 0)),
                     _ => false
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Виняток у репозиторії під час Delete: {ex.Message}");
+                Console.WriteLine($"[ERROR] Помилка Delete: {ex.Message}");
             }
 
             if (success)
             {
-                Console.WriteLine("[DEBUG] Запис успішно видалено!");
+                Console.WriteLine("[DEBUG UI] Запис успішно видалено за назвою!");
                 LoadTableData(currentTable);
                 ClearInputs();
             }
             else
             {
-                Console.WriteLine("[ERROR] Не вдалося видалити запис.");
+                Console.WriteLine("[ERROR] Не вдалося видалити. Перевір, чи існує таке ім'я.");
             }
         }
 
         private void ClearInputs()
         {
-            selectedId = -1;
             foreach (var child in InputsPanel.Children)
             {
                 if (child is StackPanel sp)
