@@ -11,10 +11,7 @@ namespace FootwearApp.Repositories
         public SoleTable GetbyID(int id)
         {
             foreach (SoleTable k in GetAll())
-            {
-                if (k.id == id)
-                    return k;
-            }
+                if (k.id == id) return k;
             return null;
         }
 
@@ -26,61 +23,30 @@ namespace FootwearApp.Repositories
                 using (var reader = db.execSelect("SELECT id, name FROM sole"))
                 {
                     if (reader != null)
-                    {
                         while (reader.Read())
-                        {
-                            list.Add(new SoleTable(
-                                reader.GetInt32("id"),
-                                reader.GetString("name")
-                            ));
-                        }
-                    }
+                            list.Add(new SoleTable(reader.GetInt32("id"), reader.GetString("name")));
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            catch (Exception e) { Console.WriteLine(e.Message); }
             return list;
         }
 
         public bool Add(SoleTable entity)
         {
-            try
-            {
-                return db.execSql($"INSERT INTO sole (name) VALUES ('{entity.nazva}')");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"INSERT INTO sole (id, name) VALUES ({entity.id}, '{entity.nazva}')"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public bool Delete(SoleTable entity)
         {
-            try
-            {
-                return db.execSql($"DELETE FROM sole WHERE id = {entity.id}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"DELETE FROM sole WHERE id = {entity.id}"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public bool Update(SoleTable entity)
         {
-            try
-            {
-                return db.execSql($"UPDATE sole SET name = '{entity.nazva}' WHERE id = {entity.id}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"UPDATE sole SET name = '{entity.nazva}' WHERE id = {entity.id}"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
     }
 }

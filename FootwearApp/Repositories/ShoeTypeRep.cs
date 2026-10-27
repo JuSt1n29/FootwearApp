@@ -11,10 +11,7 @@ namespace FootwearApp.Repositories
         public ShoeTypeTable GetbyID(int id)
         {
             foreach (ShoeTypeTable k in GetAll())
-            {
-                if (k.id == id)
-                    return k;
-            }
+                if (k.id == id) return k;
             return null;
         }
 
@@ -23,64 +20,33 @@ namespace FootwearApp.Repositories
             List<ShoeTypeTable> list = new List<ShoeTypeTable>();
             try
             {
-                using (var reader = db.execSelect("SELECT id, name FROM shoe_type"))
+                using (var reader = db.execSelect("SELECT id, name FROM shoetype"))
                 {
                     if (reader != null)
-                    {
                         while (reader.Read())
-                        {
-                            list.Add(new ShoeTypeTable(
-                                reader.GetInt32("id"),
-                                reader.GetString("name")
-                            ));
-                        }
-                    }
+                            list.Add(new ShoeTypeTable(reader.GetInt32("id"), reader.GetString("name")));
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            catch (Exception e) { Console.WriteLine(e.Message); }
             return list;
         }
 
         public bool Add(ShoeTypeTable entity)
         {
-            try
-            {
-                return db.execSql($"INSERT INTO shoe_type (name) VALUES ('{entity.nazva}')");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"INSERT INTO shoetype (id, name) VALUES ({entity.id}, '{entity.nazva}')"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public bool Delete(ShoeTypeTable entity)
         {
-            try
-            {
-                return db.execSql($"DELETE FROM shoe_type WHERE id = {entity.id}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"DELETE FROM shoetype WHERE id = {entity.id}"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public bool Update(ShoeTypeTable entity)
         {
-            try
-            {
-                return db.execSql($"UPDATE shoe_type SET name = '{entity.nazva}' WHERE id = {entity.id}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            try { return db.execSql($"UPDATE shoetype SET name = '{entity.nazva}' WHERE id = {entity.id}"); }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
     }
 }
