@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class SoleTable
+    public class SoleTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public SoleTable(int id, string nazva)
         {

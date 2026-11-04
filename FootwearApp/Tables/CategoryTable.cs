@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class CategoryTable
+    public class CategoryTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public CategoryTable(int id, string nazva)
         {

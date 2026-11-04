@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class ShoeTypeTable
+    public class ShoeTypeTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public ShoeTypeTable(int id, string nazva)
         {

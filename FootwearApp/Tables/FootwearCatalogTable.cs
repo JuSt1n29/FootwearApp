@@ -1,29 +1,29 @@
 namespace FootwearApp.Tables
 {
-    internal class FootwearCatalogTable
+    public class FootwearCatalogTable
     {
-        public int id; // Мапиться на article
-        public string nazva;
-        public int id_shoe_type;
-        public int id_audience;
-        public int id_brand;
-        public int id_upper_material;
-        public int id_lining_material;
-        public int id_sole_material;
-        public string color;
-        public string sizes;
-        public string season;
-        public decimal price;
-        public int id_category;
-        public int id_country;
-        public int id_sole_type;
-        public string shaft_height;
-        public string width_fit;
-        public string fastener;
-        public int has_membrane;
-        public int id_style;
-        public string collection;
-        public int warranty_months;
+        public int id { get; set; } // Мапиться на article
+        public string nazva { get; set; }
+        public int id_shoe_type { get; set; }
+        public int id_audience { get; set; }
+        public int id_brand { get; set; }
+        public int id_upper_material { get; set; }
+        public int id_lining_material { get; set; }
+        public int id_sole_material { get; set; }
+        public string color { get; set; }
+        public string sizes { get; set; }
+        public string season { get; set; }
+        public decimal price { get; set; }
+        public int id_category { get; set; }
+        public int id_country { get; set; }
+        public int id_sole_type { get; set; }
+        public string shaft_height { get; set; }
+        public string width_fit { get; set; }
+        public string fastener { get; set; }
+        public int has_membrane { get; set; }
+        public int id_style { get; set; }
+        public string collection { get; set; }
+        public int warranty_months { get; set; }
 
         public FootwearCatalogTable(
             int id, string nazva, int id_shoe_type, int id_audience, int id_brand,

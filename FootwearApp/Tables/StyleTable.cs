@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class StyleTable
+    public class StyleTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public StyleTable(int id, string nazva)
         {

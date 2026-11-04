@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class AudienceTable
+    public class AudienceTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public AudienceTable(int id, string nazva)
         {

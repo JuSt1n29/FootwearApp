@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class CountryTable
+    public class CountryTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public CountryTable(int id, string nazva)
         {

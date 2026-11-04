@@ -1,10 +1,10 @@
 namespace FootwearApp.Tables
 {
-    internal class BrandTable
+    public class BrandTable
     {
-        public int id;
-        public string nazva;
-        public int id_country;
+        public int id { get; set; }
+        public string nazva { get; set; }
+        public int id_country { get; set; }
 
         public BrandTable(int id, string nazva, int id_country)
         {

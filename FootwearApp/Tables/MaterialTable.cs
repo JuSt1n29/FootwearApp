@@ -1,9 +1,9 @@
 namespace FootwearApp.Tables
 {
-    internal class MaterialTable
+    public class MaterialTable
     {
-        public int id;
-        public string nazva;
+        public int id { get; set; }
+        public string nazva { get; set; }
 
         public MaterialTable(int id, string nazva)
         {
