@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "h8ZngRQBtjs=",
+  "dgSpecHash": "w088p8wqBsU=",
   "success": true,
   "projectFilePath": "/home/justin/RiderProjects/FootwearApp/FootwearApp/FootwearApp.csproj",
   "expectedPackageFiles": [
@@ -43,6 +43,7 @@
     "/home/justin/.nuget/packages/skiasharp.nativeassets.win32/3.119.4/skiasharp.nativeassets.win32.3.119.4.nupkg.sha512",
     "/home/justin/.nuget/packages/system.configuration.configurationmanager/10.0.8/system.configuration.configurationmanager.10.0.8.nupkg.sha512",
     "/home/justin/.nuget/packages/system.diagnostics.eventlog/10.0.8/system.diagnostics.eventlog.10.0.8.nupkg.sha512",
+    "/home/justin/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512",
     "/home/justin/.nuget/packages/system.security.cryptography.protecteddata/10.0.8/system.security.cryptography.protecteddata.10.0.8.nupkg.sha512",
     "/home/justin/.nuget/packages/system.security.permissions/10.0.8/system.security.permissions.10.0.8.nupkg.sha512",
     "/home/justin/.nuget/packages/system.windows.extensions/10.0.8/system.windows.extensions.10.0.8.nupkg.sha512",

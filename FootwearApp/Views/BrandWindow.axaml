@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FootwearApp.BrandWindow"
+        Title="Довідник: Brand" Width="700" Height="450">
+    
+    <Grid RowDefinitions="Auto, Auto, *" Margin="15" RowSpacing="10">
+        <TextBlock Grid.Row="0" Text="Редагування довідника: Brand" FontSize="18" FontWeight="Bold"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+            <StackPanel Spacing="2">
+                <TextBlock Text="Name" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="NameBox" Width="130" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Country ID" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="CountryIdBox" Width="100" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="ID (Update/Delete)" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="UpdateIdBox" Width="120" Height="28" IsReadOnly="True"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Bottom">
+                <Button Content="Add" Click="OnAddClick" Background="#D4EDDA"/>
+                <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD"/>
+                <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA"/>
+            </StackPanel>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" x:Name="MainDataGrid"
+                  AutoGenerateColumns="True"
+                  SelectionMode="Single"
+                  SelectionChanged="OnSelectionChanged"/>
+    </Grid>
+</Window>

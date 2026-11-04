@@ -20,18 +20,18 @@ namespace FootwearApp.Repositories
             List<FootwearCatalogTable> list = new List<FootwearCatalogTable>();
             try
             {
-                using (var reader = db.execSelect("SELECT * FROM footwearcatalog"))
+                using (var reader = db.execSelect("SELECT * FROM footwear_catalog"))
                 {
                     if (reader != null)
                     {
                         while (reader.Read())
                         {
                             list.Add(new FootwearCatalogTable(
-                                reader.GetInt32("id"),
-                                reader.GetString("nazva"),
+                                reader.GetInt32("article"),
+                                reader.GetString("name"),
                                 reader.GetInt32("id_brand"),
                                 reader.GetInt32("id_category"),
-                                reader.GetInt32("id_material"),
+                                reader.GetInt32("id_lining_material"),
                                 reader.GetInt32("id_shoe_type"),
                                 reader.GetInt32("id_sole"),
                                 reader.GetInt32("id_style"),

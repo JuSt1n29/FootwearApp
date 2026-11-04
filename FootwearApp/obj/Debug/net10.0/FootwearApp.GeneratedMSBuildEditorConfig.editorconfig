@@ -9,7 +9,7 @@ build_property.AvaloniaNameGeneratorAttachDevTools = true
 build_property.AvaloniaUseCompiledBindingsByDefault = true
 build_property.AvaloniaMainPackageVersion = 12.1.4
 build_property.AvaloniaPreviewerNetCoreToolPath = /home/justin/.nuget/packages/avalonia/12.1.4/buildTransitive//../tools/net8.0/designer/Avalonia.Designer.HostApp.dll
-build_property.AvaloniaResourcePaths = /home/justin/RiderProjects/FootwearApp/FootwearApp/App.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/MainWindow.axaml
+build_property.AvaloniaResourcePaths = /home/justin/RiderProjects/FootwearApp/FootwearApp/App.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/MainWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/AudienceWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/BrandWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/CategoryWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/CountryWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/FootwearCatalogWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/MaterialWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/ShoeTypeWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/SoleWindow.axaml,/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/StyleWindow.axaml
 build_property.TargetFramework = net10.0
 build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
@@ -31,4 +31,31 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/justin/RiderProjects/FootwearApp/FootwearApp/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/AudienceWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/BrandWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/CategoryWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/CountryWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/FootwearCatalogWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/MaterialWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/ShoeTypeWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/SoleWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/justin/RiderProjects/FootwearApp/FootwearApp/Views/StyleWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

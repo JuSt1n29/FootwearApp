@@ -20,7 +20,7 @@ namespace FootwearApp.Repositories
             List<ShoeTypeTable> list = new List<ShoeTypeTable>();
             try
             {
-                using (var reader = db.execSelect("SELECT id, name FROM shoetype"))
+                using (var reader = db.execSelect("SELECT id, name FROM shoe_type"))
                 {
                     if (reader != null)
                         while (reader.Read())

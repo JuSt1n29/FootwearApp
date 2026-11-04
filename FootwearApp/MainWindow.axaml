@@ -1,48 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="FootwearApp.MainWindow"
-        Title="Footwear App - CRUD" Height="650" Width="1050">
-    
-    <Grid ColumnDefinitions="220, *" RowDefinitions="Auto, *">
+        Title="Footwear Catalog - Головне меню" Width="420" Height="580">
+    <StackPanel Spacing="6" Margin="25" VerticalAlignment="Center">
+        <TextBlock Text="Керування довідниками" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,15"/>
         
-        <!-- ПАНЕЛЬ ЗБЛИКУ: Вибір таблиць (як закладки в IDE) -->
-        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Background="#252526" BorderBrush="#3f3f46" BorderThickness="0,0,1,0">
-            <StackPanel Margin="10" Spacing="5">
-                <TextBlock Text="ТАБЛИЦІ" Foreground="#858585" FontWeight="Bold" FontSize="12" Margin="5,5,5,10"/>
-                
-                <Button Content="Країни (Country)" Name="BtnCountry" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Бренди (Brand)" Name="BtnBrand" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Категорії (Category)" Name="BtnCategory" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Матеріали (Material)" Name="BtnMaterial" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Типи взуття (ShoeType)" Name="BtnShoeType" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Підошви (Sole)" Name="BtnSole" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Стилі (Style)" Name="BtnStyle" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Аудиторія (Audience)" Name="BtnAudience" Click="OnTableSelected" HorizontalAlignment="Stretch" />
-                <Button Content="Каталог (Catalog)" Name="BtnCatalog" Click="OnTableSelected" HorizontalAlignment="Stretch" FontWeight="Bold" Background="#007acc" Foreground="White"/>
-            </StackPanel>
-        </Border>
-
-        <!-- ПАНЕЛЬ ЗВЕРХУ: Поля введення та кнопки управління -->
-        <Border Grid.Row="0" Grid.Column="1" Background="#1e1e1e" Padding="15" BorderBrush="#3f3f46" BorderThickness="0,0,0,1">
-            <DockPanel>
-                <!-- Кнопки справа -->
-                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <Button Content="Додати (Add)" Name="BtnAdd" Click="OnAddClick" Background="#28a745" Foreground="White" Padding="10,6"/>
-                    <Button Content="Змінити (Update)" Name="BtnUpdate" Click="OnUpdateClick" Background="#ffc107" Foreground="Black" Padding="10,6"/>
-                    <Button Content="Видалити (Delete)" Name="BtnDelete" Click="OnDeleteClick" Background="#dc3545" Foreground="White" Padding="10,6"/>
-                </StackPanel>
-
-                <!-- Динамічні поля введення зліва / по центру -->
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                    <StackPanel Name="InputsPanel" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                        <!-- Сюди код динамічно додаватиме TextBox-и для обраної таблиці -->
-                    </StackPanel>
-                </ScrollViewer>
-            </DockPanel>
-        </Border>
-
-        <!-- ЦЕНТР: Таблиця (DataGrid) для виведення даних -->
-        <DataGrid Grid.Row="1" Grid.Column="1" Name="MainDataGrid" AutoGenerateColumns="True" IsReadOnly="True" SelectionChanged="OnDataGridSelectionChanged"/>
-
-    </Grid>
+        <Button Content="Country (Країни)" Click="OpenCountryWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Category (Категорії)" Click="OpenCategoryWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Material (Матеріали)" Click="OpenMaterialWin" HorizontalAlignment="Stretch"/>
+        <Button Content="ShoeType (Типи взуття)" Click="OpenShoeTypeWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Sole (Підошви)" Click="OpenSoleWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Style (Стилі)" Click="OpenStyleWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Audience (Аудиторія)" Click="OpenAudienceWin" HorizontalAlignment="Stretch"/>
+        <Button Content="Brand (Бренди)" Click="OpenBrandWin" HorizontalAlignment="Stretch"/>
+        <Button Content="FootwearCatalog (Каталог взуття)" Click="OpenCatalogWin" HorizontalAlignment="Stretch" Background="LightBlue"/>
+    </StackPanel>
 </Window>

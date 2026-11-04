@@ -20,13 +20,13 @@ namespace FootwearApp.Repositories
             List<BrandTable> list = new List<BrandTable>();
             try
             {
-                using (var reader = db.execSelect("SELECT id, nazva, id_country FROM brand"))
+                using (var reader = db.execSelect("SELECT id, name, id_country FROM brand"))
                 {
                     if (reader != null)
                         while (reader.Read())
                             list.Add(new BrandTable(
                                 reader.GetInt32("id"),
-                                reader.GetString("nazva"),
+                                reader.GetString("name"),
                                 reader.GetInt32("id_country")
                             ));
                 }
